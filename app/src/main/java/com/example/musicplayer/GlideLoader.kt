@@ -9,7 +9,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 
-class GlideLoader {
     fun ImageView.load(url: String, onLoadingFinished: () -> Unit = {}) {
         val listener = object : RequestListener<Drawable> {
             override fun onLoadFailed(
@@ -36,8 +35,8 @@ class GlideLoader {
         Glide.with(this)
             .load(url)
             .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_foreground).dontTransform())
+            .centerCrop()
             .listener(listener)
             .into(this)
 
     }
-}
