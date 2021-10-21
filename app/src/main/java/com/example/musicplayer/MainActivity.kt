@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.musicplayer.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Playable {
     lateinit var binding: ActivityMainBinding
     private var position = 0
     lateinit var updater:Runnable
@@ -29,19 +29,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnPlay.setOnClickListener {
             if (!mediaPresenter.isPlaying()) {
-                mediaPresenter.onBtnPlay()
+                onBtnPlay()
                 binding.btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
             } else {
-                mediaPresenter.onBtnPause()
+                onBtnPause()
                 binding.btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
             }
         }
         binding.btnNext.setOnClickListener {
-            mediaPresenter.onBtnNext()
+            onBtnNext()
             binding.btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         }
         binding.btnPrev.setOnClickListener{
-            mediaPresenter.onBtnPrev()
+            onBtnPrev()
             binding.btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         }
 
@@ -59,5 +59,21 @@ class MainActivity : AppCompatActivity() {
             }
         })
         mediaPresenter.initPlayer()
+    }
+
+    override fun onBtnPlay() {
+        mediaPresenter.onBtnPlay()
+    }
+
+    override fun onBtnPause() {
+        mediaPresenter.onBtnPause()
+    }
+
+    override fun onBtnNext() {
+        mediaPresenter.onBtnNext()
+    }
+
+    override fun onBtnPrev() {
+        mediaPresenter.onBtnPrev()
     }
 }
