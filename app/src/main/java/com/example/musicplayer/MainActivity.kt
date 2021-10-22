@@ -16,7 +16,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.musicplayer.data.MediaViewModel
 import com.example.musicplayer.data.Track
-
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.example.musicplayer.notifications.CreateNotification
 import com.example.musicplayer.notifications.OnClearFromRecentService
@@ -25,18 +24,18 @@ import com.example.musicplayer.notifications.OnClearFromRecentService
 class MainActivity : AppCompatActivity(), Playable {
     private val handler = Handler(Looper.getMainLooper())
     private val NOTIFICATION_CHANNEL_NAME = "MediaPlayer"
-    lateinit var binding: ActivityMainBinding
-    lateinit var mediaViewModel: MediaViewModel
-    lateinit var notificationManager: NotificationManagerCompat
-    lateinit var mediaPlayer: MediaPlayer
-    lateinit var updater: Runnable
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var mediaViewModel: MediaViewModel
+    private lateinit var notificationManager: NotificationManagerCompat
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var updater: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         mediaViewModel = ViewModelProvider(this).get(MediaViewModel::class.java)
+        mediaPlayer = MediaPlayer()
 
         mediaViewModel.currentTrack.observe(this, {
             binding.apply {
@@ -58,26 +57,24 @@ class MainActivity : AppCompatActivity(), Playable {
                 }
         })
 
-        createNotificationChannel()
-        registerReceiver(broadcastReceiver, IntentFilter("TRACKS_TRACKS"))
-        startService(Intent(applicationContext, OnClearFromRecentService::class.java))
-
-        binding.btnPlay.setOnClickListener {
-            if (!mediaPlayer.isPlaying) {
-                onBtnPlay()
-                binding.btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
-            } else {
-                onBtnPause()
-                binding.btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+        binding.apply {
+            btnPlay.setOnClickListener {
+                if (!mediaPlayer.isPlaying) {
+                    onBtnPlay()
+                    btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
+                } else {
+                    onBtnPause()
+                    btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                }
             }
-        }
-        binding.btnNext.setOnClickListener {
-            onBtnNext()
-            binding.btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-        }
-        binding.btnPrev.setOnClickListener {
-            onBtnPrev()
-            binding.btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            btnNext.setOnClickListener {
+                onBtnNext()
+                btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            }
+            btnPrev.setOnClickListener {
+                onBtnPrev()
+                btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            }
         }
 
         binding.sbMain?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -95,17 +92,21 @@ class MainActivity : AppCompatActivity(), Playable {
                 // pass
             }
         })
+
+        createNotificationChannel()
+        registerReceiver(broadcastReceiver, IntentFilter("TRACKS_TRACKS"))
+        startService(Intent(applicationContext, OnClearFromRecentService::class.java))
         prepareMediaPlayer()
+
     }
 
-    val broadcastReceiver = object : BroadcastReceiver() {
+    private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent?) {
-            val action = intent?.extras?.getString("actionname")
 
-            when (action) {
+            when (intent?.extras?.getString("actionname")) {
                 CreateNotification.ACTION_PREVIOUS -> onBtnPrev()
                 CreateNotification.ACTION_PLAY -> {
-                    if (mediaPlayer.isPlaying()) {
+                    if (mediaPlayer.isPlaying) {
                         onBtnPause()
                     } else {
                         onBtnPlay()
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity(), Playable {
         unregisterReceiver(broadcastReceiver)
     }
 
-    fun createNotificationChannel() {
+    private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CreateNotification.CHANNEL_ID,
             NOTIFICATION_CHANNEL_NAME,
@@ -136,16 +137,15 @@ class MainActivity : AppCompatActivity(), Playable {
         notificationManager.createNotificationChannel(channel)
     }
 
-    fun prepareMediaPlayer() {
+    private fun prepareMediaPlayer() {
         try {
             val track = mediaViewModel.tracklist[mediaViewModel.position].also {
                 mediaViewModel.currentTrack.value = it
             }
-            mediaPlayer = MediaPlayer()
+
             mediaPlayer.setDataSource(track.trackUri)
             mediaPlayer.prepareAsync()
             mediaViewModel.currentTime.value = 0
-
             updater = Runnable {
                 mediaViewModel.currentTime.value = mediaPlayer.currentPosition
                 handler.postDelayed(updater, 1000)
@@ -180,10 +180,12 @@ class MainActivity : AppCompatActivity(), Playable {
 
     override fun onBtnNext() {
         handler.removeCallbacks(updater)
+        mediaPlayer.reset()
         mediaPlayer.release()
         if (mediaViewModel.position == mediaViewModel.tracklist.size - 1) {
             mediaViewModel.position = 0
         } else mediaViewModel.position++
+        mediaViewModel.currentTrack.value = mediaViewModel.tracklist[mediaViewModel.position]
         mediaViewModel.currentTrack.value?.let {
             CreateNotification.createNotification(
                 applicationContext,
@@ -195,10 +197,12 @@ class MainActivity : AppCompatActivity(), Playable {
 
     override fun onBtnPrev() {
         handler.removeCallbacks(updater)
+        mediaPlayer.reset()
         mediaPlayer.release()
         if (mediaViewModel.position == 0) {
             mediaViewModel.position = mediaViewModel.tracklist.size - 1
         } else mediaViewModel.position++
+        mediaViewModel.currentTrack.value = mediaViewModel.tracklist[mediaViewModel.position]
         mediaViewModel.currentTrack.value?.let {
             CreateNotification.createNotification(
                 applicationContext,
@@ -208,7 +212,7 @@ class MainActivity : AppCompatActivity(), Playable {
         prepareMediaPlayer()
     }
 
-    fun changeView(track: Track?) {
+    private fun changeView(track: Track?) {
         binding.apply {
             tvTitle.text = track?.title
             tvAuthor.text = track?.artist
