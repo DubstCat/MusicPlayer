@@ -9,34 +9,34 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 
-    fun ImageView.load(url: String, onLoadingFinished: () -> Unit = {}) {
-        val listener = object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                onLoadingFinished()
-                return false
-            }
-
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                onLoadingFinished()
-                return false
-            }
+fun ImageView.load(url: String, onLoadingFinished: () -> Unit = {}) {
+    val listener = object : RequestListener<Drawable> {
+        override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+        ): Boolean {
+            onLoadingFinished()
+            return false
         }
-        Glide.with(this)
-            .load(url)
-            .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_foreground).dontTransform())
-            .centerCrop()
-            .listener(listener)
-            .into(this)
 
+        override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+        ): Boolean {
+            onLoadingFinished()
+            return false
+        }
     }
+    Glide.with(this)
+        .load(url)
+        .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_foreground).dontTransform())
+        .centerCrop()
+        .listener(listener)
+        .into(this)
+
+}

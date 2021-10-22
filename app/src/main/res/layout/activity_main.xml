@@ -4,66 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    android:gravity="center">
+    tools:context=".MainActivity">
 
     <ImageView
-        android:layout_height="300dp"
-        android:layout_width="300dp"
-        android:src="@mipmap/ic_launcher"
-        android:scaleType="centerCrop"
         android:id="@+id/iv_cover"
-        />
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:id="@+id/tvTitle"
-        android:text="Track title"
-        />
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Track title"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/tvAuthor"
-        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Track author"
-        />
+        android:textSize="16sp" />
+
     <SeekBar
+        android:id="@+id/sbMain"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:id="@+id/sbMain"
-        android:secondaryProgressTint="#FF0000"/>
+        android:secondaryProgressTint="#FF0000" />
+
     <TextView
+        android:id="@+id/tvTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvTimer"
-        android:textSize="12sp"
+        android:text="0:00:00"
         android:textColor="#63000000"
-        android:text="0:00:00"/>
+        android:textSize="12sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_margin="5dp"
         android:gravity="center"
-        android:layout_margin="5dp">
+        android:orientation="horizontal">
+
         <ImageButton
+            android:id="@+id/btnPrev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_skip_previous_24"
-            android:id="@+id/btnPrev"/>
+            android:background="@drawable/bg_button_media"
+            android:src="@drawable/ic_baseline_skip_previous_24" />
+
         <ImageButton
+            android:id="@+id/btnPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_play_arrow_24"
-            android:id="@+id/btnPlay"/>
+            android:layout_margin="3dp"
+            android:background="@drawable/bg_button_media"
+            android:src="@drawable/ic_baseline_play_arrow_24" />
+
         <ImageButton
+            android:id="@+id/btnNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_skip_next_24"
-            android:id="@+id/btnNext"/>
+            android:background="@drawable/bg_button_media"
+            android:src="@drawable/ic_baseline_skip_next_24" />
 
     </LinearLayout>
 

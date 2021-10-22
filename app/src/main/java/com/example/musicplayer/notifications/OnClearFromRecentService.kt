@@ -1,10 +1,10 @@
-package com.example.musicplayer
+package com.example.musicplayer.notifications
 
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 
-class OnClearFromRecentService: Service() {
+class OnClearFromRecentService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
