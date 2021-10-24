@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context=".MainActivity">
+        tools:context=".ui.MainActivity">
 
         <ImageView
             android:id="@+id/iv_cover"
@@ -54,26 +54,37 @@
                 android:id="@+id/btnPrev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_button_media"
                 android:src="@drawable/ic_baseline_skip_previous_24" />
 
             <ImageButton
                 android:id="@+id/btnPlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_button_media"
                 android:src="@drawable/ic_baseline_play_arrow_24" />
 
             <ImageButton
                 android:id="@+id/btnNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_button_media"
                 android:src="@drawable/ic_baseline_skip_next_24" />
+
         </LinearLayout>
 
         <SeekBar
-            android:id="@+id/seekBar"
+            android:id="@+id/sbMain"
             android:layout_width="300dp"
             android:layout_height="wrap_content" />
 
-
+        <TextView
+            android:id="@+id/tvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00:00"
+            android:textColor="#63000000"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

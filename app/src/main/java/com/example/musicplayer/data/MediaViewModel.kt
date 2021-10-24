@@ -1,6 +1,7 @@
 package com.example.musicplayer.data
 
 import android.app.Application
+import android.media.MediaPlayer
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.musicplayer.R
@@ -17,6 +18,8 @@ class MediaViewModel(val context: Application) : AndroidViewModel(context) {
     var currentTime = MutableLiveData<Int>()
     var tracklist: List<Track>
     var position: Int
+
+    var mediaPlayer:MediaPlayer = MediaPlayer()
 
     init {
         tracklist = loadTracks()
@@ -39,6 +42,8 @@ class MediaViewModel(val context: Application) : AndroidViewModel(context) {
         return gson.fromJson(s, listType)
     }
 
+
+
     fun millisecondsToTimer(milliseconds: Long): String {
         var timerString = ""
         var secondString = ""
@@ -57,4 +62,10 @@ class MediaViewModel(val context: Application) : AndroidViewModel(context) {
         timerString = "$timerString$minutes:$secondString"
         return timerString
     }
+
+    val isPlaying:Boolean
+    get() = mediaPlayer.isPlaying
+
+    val currentPosition:Int
+    get() = mediaPlayer.currentPosition
 }

@@ -7,11 +7,12 @@
         <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/drawable/bg_button_media.xml" value="0.2703125" />
         <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_pause_24.xml" value="0.2703125" />
         <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_play_arrow_24.xml" value="0.2703125" />
+        <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_restart_24.xml" value="0.14635416666666667" />
         <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_skip_next_24.xml" value="0.2703125" />
         <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_skip_previous_24.xml" value="0.2703125" />
         <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2703125" />
-        <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/layout-land/activity_main.xml" value="0.1" />
-        <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/layout/activity_main.xml" value="0.4" />
+        <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/layout-land/activity_main.xml" value="0.264" />
+        <entry key="..\:/CODE/AndroidProjects/MusicPlayer/app/src/main/res/layout/activity_main.xml" value="0.2" />
       </map>
     </option>
   </component>
