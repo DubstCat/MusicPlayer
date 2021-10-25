@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
@@ -53,7 +54,6 @@ class MainActivity : AppCompatActivity(), Playable {
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent?) {
-
             when (intent?.extras?.getString("actionname")) {
                 CreateNotification.ACTION_PREVIOUS -> onBtnPrev()
                 CreateNotification.ACTION_PLAY -> {
@@ -102,6 +102,9 @@ class MainActivity : AppCompatActivity(), Playable {
                     // pass
                 }
             })
+        }
+        mediaViewModel.mediaPlayer.setOnPreparedListener{
+            Toast.makeText(this, "Audio is ready", Toast.LENGTH_SHORT).show()
         }
     }
 
