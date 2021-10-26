@@ -6,11 +6,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.MediaPlayer
+import android.media.AudioManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,19 +22,23 @@ import com.example.musicplayer.R
 import com.example.musicplayer.data.MediaViewModel
 import com.example.musicplayer.data.Track
 import com.example.musicplayer.databinding.ActivityMainBinding
-import com.example.musicplayer.load
+import com.example.musicplayer.util.load
 import com.example.musicplayer.notifications.CreateNotification
 import com.example.musicplayer.notifications.OnClearFromRecentService
 
 
 class MainActivity : AppCompatActivity(), Playable {
     private val NOTIFICATION_CHANNEL_NAME = "MediaPlayer"
+    private val PLAYER_IS_READY = "PLAYER_IS_READY"
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var binding: ActivityMainBinding
     private lateinit var mediaViewModel: MediaViewModel
     private lateinit var notificationManager: NotificationManagerCompat
 
     private lateinit var updater: Runnable
+    val audioManager: AudioManager by lazy {
+        getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,10 +107,13 @@ class MainActivity : AppCompatActivity(), Playable {
                     // pass
                 }
             })
+            mediaViewModel.mediaPlayer.setOnPreparedListener {
+                Toast.makeText(applicationContext, "Audio is ready", Toast.LENGTH_SHORT).show()
+                progressBar?.visibility = View.GONE
+                btnPlay.isClickable = true
+            }
         }
-        mediaViewModel.mediaPlayer.setOnPreparedListener{
-            Toast.makeText(this, "Audio is ready", Toast.LENGTH_SHORT).show()
-        }
+
     }
 
     override fun onStart() {
@@ -131,6 +139,8 @@ class MainActivity : AppCompatActivity(), Playable {
     }
 
     private fun prepareMediaPlayer() {
+        binding.progressBar?.visibility = View.VISIBLE
+        binding.btnPlay.isClickable = false
         try {
             val track = mediaViewModel.tracklist[mediaViewModel.position].also {
                 mediaViewModel.currentTrack.value = it
@@ -148,7 +158,6 @@ class MainActivity : AppCompatActivity(), Playable {
             handler.postDelayed(updater, 1000)
         }
     }
-
 
     override fun onBtnPlay() {
         initializeUpdater()
@@ -218,7 +227,21 @@ class MainActivity : AppCompatActivity(), Playable {
                 btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
             }
         }
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(PLAYER_IS_READY, binding.btnPlay.isClickable)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        binding.btnPlay.isClickable = savedInstanceState.getBoolean(PLAYER_IS_READY)
+        if (savedInstanceState.getBoolean(PLAYER_IS_READY)) {
+            binding.progressBar?.visibility = View.GONE
+        } else {
+            binding.progressBar?.visibility = View.VISIBLE
+        }
     }
 
     private fun changeTime(i: Int) {
@@ -227,7 +250,7 @@ class MainActivity : AppCompatActivity(), Playable {
             mediaViewModel.millisecondsToTimer(
                 i.toLong()
             )
-        if (binding.sbMain.progress == binding.sbMain.max){
+        if (binding.sbMain.progress == binding.sbMain.max) {
             binding.btnPlay.setImageResource(R.drawable.ic_baseline_restart_24)
         }
     }
